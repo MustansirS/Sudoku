@@ -18,7 +18,8 @@ int main(int argc, char* argv[]) {
         if (argc != 3) return 1;
         string flag = "-s";
         bool show = (argv[1] == flag);
-        Sudoku s{argv[2], show};
+        string puzzle_num = argv[2];
+        Sudoku s{"puzzle"+puzzle_num+".txt", show};
         cout << s << endl;
         auto t1 = high_resolution_clock::now();
         s.alg3();
@@ -29,8 +30,11 @@ int main(int argc, char* argv[]) {
         if (s.checkgrid()) cout << "Success!" << endl;
         cout << "It took "<< ms_double.count() << " ms" << endl;
     } else if (argv[0] == all) {
-        if (argc != 2) return 1;
-        int numpuzzles = stoi(argv[1]);
+        int numpuzzles = 0;
+        string puz = "puzzle";
+        for (auto& dir_entry: std::filesystem::directory_iterator("./")) {
+            if (dir_entry.path().stem().string().substr(0,6) == puz) numpuzzles++;
+        }
         map<int,vector<int>> guess_map;
         vector<PuzzleTime> time_rankings;
         for (int i = 1; i <= numpuzzles; ++i) {
