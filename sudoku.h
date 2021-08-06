@@ -10,9 +10,9 @@ using namespace std;
 struct Pos { int r,c; };
 
 class Sudoku {
+	int empty;
 	vector<vector<int>> grid;
 	vector<vector<bool>> grid_color;
-	int empty;
 	bool show;
 public:
     int numguesses = 0;
