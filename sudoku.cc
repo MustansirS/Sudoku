@@ -267,6 +267,7 @@ void Sudoku::alg3(ostream &out) {
 	for (int t = 0; t < (int)info.size(); ++t) {
 		if (exp.guesswork(t,gp.r,gp.c)) {
 			if (show) out << "Guessed " << info[t] << " at " << gp.r << "," << gp.c << endl;
+            numguesses++;
 			grid[gp.r][gp.c] = info[t];
 			empty--;
 			alg3(out);
@@ -278,7 +279,10 @@ void Sudoku::alg3(ostream &out) {
 ostream &operator<<(ostream &out, const Sudoku &s) {
 	for (int i = 0; i < 9; ++i) {
 		for (int j = 0; j < 9; ++j) {
-			out << s.grid[i][j];
+            if (s.grid[i][j] == 0) out << "\033[41m";
+			if (s.grid[i][j] != 0) out << s.grid[i][j];
+            else out << " ";
+            if (s.grid[i][j] == 0) out << "\033[0m";
 			if (j != 8) out << " ";
 		}
 		out << endl;

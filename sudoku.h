@@ -14,6 +14,7 @@ class Sudoku {
 	int empty;
 	bool show;
 public:
+    int numguesses = 0;
 	Sudoku(string filename, bool show = true);
 	Sudoku(const Sudoku &other);
 	Sudoku &operator=(const Sudoku &other);
