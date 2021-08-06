@@ -11,6 +11,7 @@ struct Pos { int r,c; };
 
 class Sudoku {
 	vector<vector<int>> grid;
+	vector<vector<bool>> grid_color;
 	int empty;
 	bool show;
 public:

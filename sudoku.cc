@@ -5,12 +5,19 @@ Sudoku::Sudoku(string filename, bool show) : empty{0}, show{show} {
 	int x;
 	for (int i = 0; i < 9; ++i) {
 		vector<int> v;
+        vector<bool> color;
 		for (int j = 0; j < 9; ++j) {
 			f >> x;
 			v.push_back(x);
-			if (x == 0) empty++;
+			if (x == 0) {
+                empty++;
+                color.push_back(true);
+            } else {
+                color.push_back(false);
+            }
 		}
 		grid.push_back(v);
+        grid_color.push_back(color);
 	}
 }
 
@@ -125,8 +132,11 @@ void Sudoku::alg1(ostream &out) {
 				if (grid[i][j] != 0) continue;
 				a = feasibility(i,j);
 				if (a.size() == 1) {
-					if (show) out << "Placing " << a[0] << " at " << i+1 << "," << j+1 << " because nothing else can go here!" << endl;
 					grid[i][j] = a[0];
+					if (show) {
+                        out << "Placing " << a[0] << " at " << i+1 << "," << j+1 << " because nothing else can go here!" << endl;
+                        out << *this << endl;
+                    }
 					empty--;
 				}
 			}
@@ -175,20 +185,29 @@ void Sudoku::alg2(ostream &out) {
 				for (int k = 1; k < 10; ++k) {
 					if (!feasible(k,i,j)) continue;
 					if (timesFeasibleInRow(k,i) == 1) {
-						if (show) out << "Placing " << k << " at " << i+1 << "," << j+1 << " because it can go nowhere else in the row!" << endl;
 						grid[i][j] = k;
+						if (show) {
+                            out << "Placing " << k << " at " << i+1 << "," << j+1 << " because it can go nowhere else in the row!" << endl;
+                            out << *this << endl;
+                        }
 						empty--;
 						change++;
 						break;
 					} else if (timesFeasibleInCol(k,j) == 1) {
-						if (show) out << "Placing " << k << " at " << i+1 << "," << j+1 << " because it can go nowhere else in the column!" << endl;
 						grid[i][j] = k;
+						if (show) {
+                            out << "Placing " << k << " at " << i+1 << "," << j+1 << " because it can go nowhere else in the column!" << endl;
+                            out << *this << endl;
+                        }
 						empty--;
 						change++;
 						break;
 					} else if (timesFeasibleInGrid(k,Sudoku::gridnum(i,j)) == 1) {
-						if (show) out << "Placing " << k << " at " << i+1 << "," << j+1 << " because it can go nowhere else in the subgrid!" << endl;
 						grid[i][j] = k;
+						if (show) {
+                            out << "Placing " << k << " at " << i+1 << "," << j+1 << " because it can go nowhere else in the subgrid!" << endl;
+                            out << *this << endl;
+                        }
 						empty--;
 						change++;
 						break;
@@ -266,9 +285,12 @@ void Sudoku::alg3(ostream &out) {
 	vector<int> info = exp.feasibility(gp.r,gp.c);
 	for (int t = 0; t < (int)info.size(); ++t) {
 		if (exp.guesswork(t,gp.r,gp.c)) {
-			if (show) out << "Guessed " << info[t] << " at " << gp.r << "," << gp.c << endl;
             numguesses++;
 			grid[gp.r][gp.c] = info[t];
+			if (show) { 
+                out << "Guessed " << info[t] << " at " << gp.r << "," << gp.c << endl;
+                out << *this << endl;
+            }
 			empty--;
 			alg3(out);
 			break;
@@ -279,10 +301,10 @@ void Sudoku::alg3(ostream &out) {
 ostream &operator<<(ostream &out, const Sudoku &s) {
 	for (int i = 0; i < 9; ++i) {
 		for (int j = 0; j < 9; ++j) {
-            if (s.grid[i][j] == 0) out << "\033[41m";
+            if (s.grid_color[i][j]) out << "\033[41m";
 			if (s.grid[i][j] != 0) out << s.grid[i][j];
             else out << " ";
-            if (s.grid[i][j] == 0) out << "\033[0m";
+            if (s.grid_color[i][j]) out << "\033[0m";
 			if (j != 8) out << " ";
 		}
 		out << endl;

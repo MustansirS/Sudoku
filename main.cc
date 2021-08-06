@@ -15,16 +15,17 @@ int main(int argc, char* argv[]) {
     string all = "./sudokuall";
     string single = "./sudoku";
     if (argv[0] == single) {
-        if (argc != 3) return 1;
+        if (argc < 2) return 1;
         string flag = "-s";
         bool show = (argv[1] == flag);
-        string puzzle_num = argv[2];
+        string puzzle_num = show ? argv[2] : argv[1];
         Sudoku s{"puzzle"+puzzle_num+".txt", show};
         cout << s << endl;
         auto t1 = high_resolution_clock::now();
         s.alg3();
         auto t2 = high_resolution_clock::now();
         duration<double, std::milli> ms_double = t2 - t1;
+        cout << "\033[32mSolved Puzzle:\033[0m" << endl;
         cout << s << endl;
         cout << "It took " << s.numguesses << " guesses" << endl;
         if (s.checkgrid()) cout << "Success!" << endl;
